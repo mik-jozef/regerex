@@ -167,6 +167,9 @@ function factory(what, ...rest) {
                   next: null, prev: content.last }
           ;
       
+      if (name === "loc" || name === "input" || name === "name")
+            throw new Error("Capturing group cannot be named \"" + name + "\".");
+      
       content.first.prev = first;
       content.last.next = last;
       

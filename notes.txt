@@ -82,14 +82,13 @@ TODO
     regexes so this library can be used without worrying about ReDos (I have
     no idea whether this is possible)
     http://www.regular-expressions.info/catastrophic.html
-7.  \p{UnicodeSomething} - implement if/when javascript implements this?
-8.  \x{UnicodeCodePoint} - implement if/when javascript implements this?
-9.  Should this be valid?
+5.  \p{UnicodeSomething} - implement if/when javascript implements this?
+6.  \x{UnicodeCodePoint} - implement if/when javascript implements this?
+7.  Should this be valid?
     (abc(;(:num:\d+)zzz(=num);){3,}(=num[0])def(, )?)*(=num[-1][-1])
-10. RegexGroup.finish() - forbids futrher modification of this RegexGroup, can do
+8.  RegexGroup.finish() - forbids futrher modification of this RegexGroup, can do
     further optimizations maybe?
-12. Alternation shouldn't manipulate quantifierStack if it contains no captrGroups?
-13. Assertion and backreference that work for all values in array, like (=ref[])
-14. Encode regex as array of integers?
-15. How should replacing work?
-16. Throw when capturing group has the same "input", "loc" or "name".
+9.  Alternation shouldn't manipulate quantifierStack if it contains no captrGroups?
+10. Assertion and backreference that work for all values in array, like (=ref[])
+11. Encode regex as array of integers?
+12. How should replacing work?
