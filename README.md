@@ -42,7 +42,7 @@ Note: this example uses backreferences, which are [not yet implemented](https://
 ### Use
 [npm](https://www.npmjs.com/package/regerex): `npm install --save regerex`
 
-`<script src="https://cdn.rawgit.com/mik-jozef/regerex/1f4c3d5022d6a22ff1881e9aede5eb4b13e1f3e0/index.js"></script>`
+`<script src="https://cdn.rawgit.com/mik-jozef/regerex/05c1c2740dbc124ed24e5fa7ab6c617ed27adcde/index.js"></script>`
 
 # API
 
