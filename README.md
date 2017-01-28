@@ -10,8 +10,8 @@ Warning: RegeRex is a young library and this README is ahead of the actual proje
 const { RegexGroup } = require("regerex"); // import RegexGroup from "regerex";
 
 (new RegexGroup("Tag"))
-.add('Tag:<(:tagName:\w+)(:attributes:(:Attr))*>(:children:(:Tag))*</(=tagName)>')
-.add('Attr:\s+(:attrName:\w+)=(.quote:"?)(:value:\w+)(=quote)')
+.add('Tag:<(:tagName:\\w+)(:attributes:(:Attr))*>(:children:(:Tag))*</(=tagName)>')
+.add('Attr:\\s+(:attrName:\\w+)=(.quote:"?)(:value:\\w+)(=quote)')
 .match('<html><head></head><body id="bodyId"></body></html>');
 
 // This is returned (some props were omitted, see API below).
@@ -37,10 +37,12 @@ const { RegexGroup } = require("regerex"); // import RegexGroup from "regerex";
 }
 ```
 
+Note: this example uses backreferences, which are [not yet implemented](https://github.com/mik-jozef/regerex/issues/2).
+
 ### Use
 [npm](https://www.npmjs.com/package/regerex): `npm install --save regerex`
 
-`<script src=" Coming "soon" (in a few minutes). "></script>`
+`<script src="https://cdn.rawgit.com/mik-jozef/regerex/1f4c3d5022d6a22ff1881e9aede5eb4b13e1f3e0/index.js"></script>`
 
 # API
 
@@ -136,7 +138,7 @@ A valid regex name starts with a letter followed by letters, numbers and undersc
 | ---- | -------
 | `^`  | Beggining of line
 | `$`  | End of line
-| `|`  | Word boundary
+| `|`  | Word boundary, see [#3](https://github.com/mik-jozef/regerex/issues/3)
 | `\a` | Start of string
 | `\z` | End of string
 | ``\` `` | Starting position
@@ -144,7 +146,7 @@ A valid regex name starts with a letter followed by letters, numbers and undersc
 
 ### Alternation and character classes
 #### [xyz...]
-Matches x, y, z or any other content. All special characters work normally. Can be negated by "^" as a first character, but a negated alternation can only contain characters, character classes and negated alternations. Capturing inside alternation works as if every option was inside ? quantifier, so all skipped alternations capture `null`.
+Matches x, y, z or any other content. All special characters work normally. Can be negated by "^" as a first character, but a negated alternation can only contain characters, character classes and negated alternations.
 
 ##### Examples
 `[abcd]` - matches "a", "b", "c" or "d".  
@@ -171,10 +173,10 @@ Non-capturing group.
 Regexp (subroutine) with name 'Name'.
 
 #### (:name:x)
-Multidimensional capturing group, captures value x under key 'name'. See 'How matching works'.
+Multidimensional capturing group, captures value x under key 'name'. See [How matching works](https://github.com/mik-jozef/regerex#how-matching-works) below.
 
 #### (:name.x)
-Shallow capturing group, captures value x under key 'name'. See 'How matching works'.
+Shallow capturing group, captures value x under key 'name'. See [How matching works](https://github.com/mik-jozef/regerex#how-matching-works) below.
 
 #### (:name:(:Name))
 Captures regexp 'Name' as an object. Subroutine must be the only thing inside capturing group.
@@ -184,9 +186,11 @@ Captures regexp 'Name' as an object. Subroutine must be the only thing inside ca
 `(:name1:(:name2.(:Name)))` - captures regexp 'Name' as both string and object.
 
 #### (.name:x), (.name.x)
-Remembers x for backreferences, but doesn't capture it. Creates separate
+Hidden capturing group, remembers x for backreferences, but doesn't capture it. See [#6](https://github.com/mik-jozef/regerex/issues/6).
 
 ### Backreference
+See [#2](https://github.com/mik-jozef/regerex/issues/2).
+
 #### (=name)
 Zero-dimensional backreference. Only matches text that was previously captured under name 'name'.
 
@@ -218,18 +222,18 @@ Matches x at least 'n' and at most 'm' times.
 
 ### Lookaround
 #### (?x:y<z)
-Lookahead, tries to match x followed by z, else tries to match y not followed by z.
+Lookahead, tries to match x followed by z, else tries to match y not followed by z. See [#7](https://github.com/mik-jozef/regerex/issues/7).
 
 ##### Examples
 (?a:[]<b) - matches "a" only if it's followed by "b". Empty alternation never matches.  
 (?[]:a<b) - matches "a only if it's not followed by "b". Empty alternation never matches.
 
 #### (?x>y:z)
-Lookbehind, tries to match y preceded by x, else tries to match z not preceded by x.
+Lookbehind, tries to match y preceded by x, else tries to match z not preceded by x. See [#8](https://github.com/mik-jozef/regerex/issues/8).
 
 ### Assertions
 #### (|name>x:y)
-If 'name' was captured, match x else match y.
+If 'name' was captured, match x else match y. See [#1](https://github.com/mik-jozef/regerex/issues/1).
 
 #### (|name=x>y:z)
 If 'name' matches x, match y else match z.

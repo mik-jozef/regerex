@@ -63,10 +63,8 @@ start === end; start > 0     start === end; end > 0
 
 
 TODO
-1.  Zero length matches. http://www.regular-expressions.info/zerolength.html
-2.  Unicode? http://www.regular-expressions.info/unicode.html
-3.  Object backreferences - require strict match, or just the captured parts?
-4.  Second mode of matching? Matches will be organized into array, including parts
+1.  Unicode? http://www.regular-expressions.info/unicode.html
+2.  Second mode of matching? Matches will be organized into array, including parts
     of the string that are not captured, object properies will not be strings,
     but integer indexes of the array. Concatenating the array will create the
     substring from starting to ending position.
@@ -79,23 +77,19 @@ TODO
     , attributes: []
     , content: 3
     }
-5.  Change capturing group to contain info about whether it captures subroutine.
-6.  Option to throw when match is not found, with descriptive message like: Expected one of: X, Y, Z found "("
-7.  Detect possible catastrophic bactracking, provide option to disable
-    such regexes so this library can be used without worrying about ReDos
+3.  Option to throw when match is not found, with descriptive message like: Expected one of: X, Y, Z found "("
+4.  Detect possible catastrophic bactracking, provide option to disable such
+    regexes so this library can be used without worrying about ReDos (I have
+    no idea whether this is possible)
     http://www.regular-expressions.info/catastrophic.html
-8. \p{UnicodeSomething} - implement if/when javascript implements this?
-9. \x{UnicodeCodePoint} - implement if/when javascript implements this?
-10. Should this be valid?
+7.  \p{UnicodeSomething} - implement if/when javascript implements this?
+8.  \x{UnicodeCodePoint} - implement if/when javascript implements this?
+9.  Should this be valid?
     (abc(;(:num:\d+)zzz(=num);){3,}(=num[0])def(, )?)*(=num[-1][-1])
-11. Throw if the same name captures both shallow and non-shallow values.
-12. RegexGroup.finish() - forbids futrher modification of this RegexGroup, can do
+10. RegexGroup.finish() - forbids futrher modification of this RegexGroup, can do
     further optimizations maybe?
-13. Change alternation so that every option contains all props it needs to set
-    to null.
-14. Throw when capturing group has the same "input", "loc" or "name".
-15. Alternation shouldn't manipulate quantifierStack if it contains no captrGroups?
-16. Assertion and backreference that work for all values in array, like (=ref[])
-17. quantifierStack.props must be null if normal quantifier, empty arr if matching ?, else array of props
-18. Encode regex as array of integers?
-19. getProps must include info about whether prop is shallow or not
+12. Alternation shouldn't manipulate quantifierStack if it contains no captrGroups?
+13. Assertion and backreference that work for all values in array, like (=ref[])
+14. Encode regex as array of integers?
+15. How should replacing work?
+16. Implement matchAll(), \c and \u today EDIT or tomorrow. Throw when capturing group has the same "input", "loc" or "name".
