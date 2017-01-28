@@ -249,7 +249,7 @@ function escapedChar(ch) {
   
   switch (ch) {
     case "d": 
-    case "D": return { min: "0", max: "9", negated: uppercase };
+    case "D": return { min: "0", max: "9", negated: upperCase };
     case "w": {
       return factory("alternation", false,
             [ factory("group", [ "_" ])
