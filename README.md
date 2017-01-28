@@ -77,7 +77,7 @@ Where to stop matching.
 Overrides `this.trackLines` if provided.
 
 ##### returned object
-```
+```javascript
 { loc:
   { start:
     { pos: number
@@ -96,7 +96,7 @@ Overrides `this.trackLines` if provided.
 ```
 
 #### replace(...)
-In the future I'd like to support replacing, but I don't yet have an idea about how it should work.
+In the future I'd like to support replacing, but I don't yet have an idea about how it should work. This method throws Error.
 
 #### *matchAll(str[, start[, end[, trackLines]]]) : Object | null
 Generator that yields all matches in string "str". See `match()`.

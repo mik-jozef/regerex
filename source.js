@@ -674,7 +674,7 @@ const RegexGroup = RegeRex.RegexGroup = class RegexGroup {
       regexPart.type === assertionEnd && (regexPart = regexPart.next);
       
       switch (regexPart.type) {
-        case assertionStart: throw new Error("Not implemented yet.") // TODO match assertion
+        case assertionStart: throw new Error("Not implemented yet, see issue #1.") // TODO match assertion
         case alternationStart: {
           for (let f = 0; f < regexPart.next.length; f++) {
             addOne("quantifier", regexPart.next[f].props, true, 1, 0)
@@ -694,7 +694,7 @@ const RegexGroup = RegeRex.RegexGroup = class RegexGroup {
           
           return retObj || finishOne("quantifier", true), retObj;
         }
-        case backreference: throw new Error("Not implemented yet."); // TODO match backreference
+        case backreference: throw new Error("Not implemented yet, see issue # 2."); // TODO match backreference
         case capturingGroupStart: {
           addOne("captrGroup", regexPart.name, regexPart.objName,
                 regexPart.shallow, pos);
@@ -781,7 +781,7 @@ const RegexGroup = RegeRex.RegexGroup = class RegexGroup {
                 case endString: boundaryMatches = pos === str.length; break;
                 case startPosition: boundaryMatches = pos === start + 1; break;
                 case endPosition: boundaryMatches = pos === end; break;
-                case wordBoundary: throw new Error("Not yet implemented."); // TODO word boundary
+                case wordBoundary: throw new Error("Not implemented yet, see issue #3."); // TODO word boundary
               }
               
               return boundaryMatches ? (pos--, ch = chPrev, true) : false;
@@ -865,10 +865,18 @@ const RegexGroup = RegeRex.RegexGroup = class RegexGroup {
   }
   
   /**
-   * TODO Generator. Yields matches.
+   * Generator. Yields matches.
    */
   *matchAll(str, start, end, trackLines = this.trackLines) {
-    throw new Error("Not implemented yet.");
+    let match = null;
+    
+    while (match = this.match(str, start, end, trackLines)) {
+      yield match;
+      
+      start = match.loc.end.pos;
+    }
+    
+    return match;
   }
 }
 
