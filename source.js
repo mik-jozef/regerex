@@ -975,12 +975,20 @@ const Regex = RegeRex.Regex = class Regex {
                   || ((specialChars.has(ch) || endChar.includes(ch))
                   && (regexPart = ch))) break;
             
-            // TODO \c, \u, \p, \x
             switch (ch) {
-              case "c":
-              case "u":
+              case "u": {
+                const substring = str.substring(pos, pos + 3)
+                    , match = substring.match(/\{([0-9a-f]{4,5})\}/)
+                    ;
+                
+                if (!match) throw new Error(pos + ": Invalid escape sequance.");
+                
+                regexPart = String.fromCharCode(parseInt(match[1], 16));
+                
+                break;
+              }
               case "p":
-              case "x": throw new Error((pos - 1) + ": Not yet implemented.");
+              case "x":
               default: throw new Error((pos - 1)
                     + ": Unknown escape character: " + ch);
             }

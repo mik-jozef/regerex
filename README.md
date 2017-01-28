@@ -126,8 +126,7 @@ A valid regex name starts with a letter followed by letters, numbers and undersc
 | `\n`   | Linefeed.
 | `\r`   | Carriage return.
 | `\t`   | Horizontal tab.
-| `\c{X}` | Control character, where x is an uppercase letter, or one of `@[]^_`. (Eg. `\\c{M}` is carriage return).
-| `\u{hhhh}` | Unicode character (`hhhh` are hexadecimal digits).
+| `\u{hhhh}`  | Unicode character (`hhhh` are hexadecimal digits).
 | `\u{hhhhh}` | Unicode character (`hhhhh` are hexadecimal digits).
 | `\X` | Equivalent to `[^\x]`, except `\a` and `\z`. Eg. `\S` is everything but whitespace.
 | `\@` | Treats @ literaly if @ is a special character, eg. "\\{" matches "{".

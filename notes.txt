@@ -92,4 +92,4 @@ TODO
 13. Assertion and backreference that work for all values in array, like (=ref[])
 14. Encode regex as array of integers?
 15. How should replacing work?
-16. Implement matchAll(), \c and \u today EDIT or tomorrow. Throw when capturing group has the same "input", "loc" or "name".
+16. Throw when capturing group has the same "input", "loc" or "name".
