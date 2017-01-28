@@ -1,0 +1,18 @@
+{
+  "name": "regerex",
+  "version": "0.1.0",
+  "description": "Regex that organizes its matches into objects.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "regex",
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mik-jozef/regerex"
+  },
+  "author": "Jozef Mikusinec <mik.jozef@gmail.com>",
+  "license": "MIT"
+}

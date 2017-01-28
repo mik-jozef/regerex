@@ -1,0 +1,101 @@
+Types
+
+next: parsed
+prev: parsed
+dimensions: Array of number
+charClass: { min: string, max: string, negated: boolean }
+props: Array of { name: string, shallow: boolean }
+
+parsed: everything below
+alternationStart { type, end, next: Array of { props, regexPart: parsed }, prev }
+alternationEnd { type, next, prev: Array of { props, regexPart: parsed } }
+assertionStart { type, name: string, dimensions, condition: parsed | null, then: parsed, thenNot: parsed, prev }
+assertionEnd { type, name: string, dimensions, condition: parsed | null, then: parsed, thenNot: parsed, next }
+backreference { type, name: string, dimensions, next, prev }
+capturingGroupStart { type, name: string, objName: string | null, shallow: boolean, next: parsed, prev }
+capturingGroupEnd {type, next, prev: parsed }
+conditionCheck: { condition: parsed, negated: boolean, lookbehind: boolean, next: parsed, prev: parsed }
+group { type, arr: Array of [ boundary | string | charClass | Array of [ string | charClass ] ], next, prev }
+subroutine { type, name: string, next, prev }
+quantifierStart { type: [greedy|lazy|possesive]Start, min: number, max: number, special: boolean, props, end: parsed, next, prev }
+quantifierEnd { type: [greedy|lazy|possesive]End, min: number, max: number, special: boolean, props, start: parsed, next, prev }
+
+
+Stacks
+
+subroutineStackItem
+{ retObj: Object
+, quantStateOpenStack: Array of quantStateStackItem
+, quantStateClosedStack: Array of quantStateStackItem
+, quantifierOpenStack: Array of quantifierStackItem
+, quantifierClosedStack: Array of quantifierStackItem
+, ignoreCase: boolean
+, next: parsed | null
+, depth: number
+}
+
+quantifierStackItem
+{ captrGroupOpenStack: Array of captrGroupStackItem
+, captrGroupClosedStack: Array of captrGroupStackItem
+, start: number
+, end: number
+, flag: boolean
+, props
+, special
+, depth: number
+}
+
+captrGroupStackItem
+{ name: string
+, objName
+, shallow: boolean
+, posStart: number
+, posEnd: number
+}
+
+
+new quantifier - captrGroup qNested; qItem
+push                         pop
+start !== end; start > 0     start === end; end === 0
+old quantifier - captrGroup qBreak;
+push                         pop
+start === end; start > 0     start === end; end > 0
+
+
+TODO
+1.  Zero length matches. http://www.regular-expressions.info/zerolength.html
+2.  Unicode? http://www.regular-expressions.info/unicode.html
+3.  Object backreferences - require strict match, or just the captured parts?
+4.  Second mode of matching? Matches will be organized into array, including parts
+    of the string that are not captured, object properies will not be strings,
+    but integer indexes of the array. Concatenating the array will create the
+    substring from starting to ending position.
+    Example:
+    { arr [ "<", "i", ">", "Hello!", "</i>" ]
+    , loc: { ... }
+    , input: "<i>Hello!</i>"
+    , name: { ... }
+    , htmlTag: 1
+    , attributes: []
+    , content: 3
+    }
+5.  Change capturing group to contain info about whether it captures subroutine.
+6.  Option to throw when match is not found, with descriptive message like: Expected one of: X, Y, Z found "("
+7.  Detect possible catastrophic bactracking, provide option to disable
+    such regexes so this library can be used without worrying about ReDos
+    http://www.regular-expressions.info/catastrophic.html
+8. \p{UnicodeSomething} - implement if/when javascript implements this?
+9. \x{UnicodeCodePoint} - implement if/when javascript implements this?
+10. Should this be valid?
+    (abc(;(:num:\d+)zzz(=num);){3,}(=num[0])def(, )?)*(=num[-1][-1])
+11. Throw if the same name captures both shallow and non-shallow values.
+12. RegexGroup.finish() - forbids futrher modification of this RegexGroup, can do
+    further optimizations maybe?
+13. Change alternation so that every option contains all props it needs to set
+    to null.
+14. Throw when capturing group has the same "input", "loc" or "name".
+15. Alternation shouldn't manipulate quantifierStack if it contains no captrGroups?
+16. Assertion and backreference that work for all values in array, like (=ref[])
+17. quantifierStack.props must be null if normal quantifier, empty arr if matching ?, else array of props
+18. Encode regex as array of integers?
+19. getProps must include info about whether prop is shallow or not
