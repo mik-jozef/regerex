@@ -187,7 +187,7 @@ Captures regexp 'Name' as an object. Subroutine must be the only thing inside ca
 #### (.name:x), (.name.x)
 Hidden capturing group, remembers x for backreferences, but doesn't capture it. See [#6](https://github.com/mik-jozef/regerex/issues/6).
 
-### Backreference
+### Backreferences
 See [#2](https://github.com/mik-jozef/regerex/issues/2).
 
 #### (=name)

@@ -59,14 +59,9 @@ function getProps(start, end) {
     start.type === capturingGroupStart
           && addProp(props, start.name, start.shallow);
     
-    if (start.type === alternationStart) {
-      start.next.forEach(option => option.props.forEach(
-            prop => addProp(props, prop.name, prop.shallow)));
-      
-      start = start.end;
-    } else if ((start.type === greedyStart || start.type === possesiveStart
-            || start.type === lazyStart) && start.props) {
-      start.props.forEach(prop =>  addProp(props, prop.name, prop.shallow));
+    if (start.type === greedyStart || start.type === possesiveStart
+          || start.type === lazyStart || start.type === alternationStart) {
+      start.props.forEach(prop => addProp(props, prop.name, prop.shallow));
       
       start = start.end;
     } else start = start.next;
@@ -84,55 +79,38 @@ function factory(what, ...rest) {
   switch (what) {
     case "alternation": {
       const [ preserve, optionsUnprocessed ] = rest
-          , last = { type: alternationEnd, next, prev }
-          , first = { type: alternationStart, end: last, next, prev }
+          , props = []
+          , last = { type: alternationEnd, props, next, prev }
+          , first = { type: alternationStart, props, end: last, next, prev }
           , options = (() => {
-              const options = [], props = [];
+              const options = [];
               
               optionsUnprocessed.forEach((option) => {
-                if (option.first.type === alternationStart) {
-                  for (let f = 0; f < option.first.length; f++) {
-                    props.push(...options.first.next[f].props);
-                    
-                    options.push({ first: options.first.next[f].regexPart,
-                          last: options.last.prev[f].regexPart, matchable: true });
-                  }
+                if (option.first.type === alternationStart
+                      && option.first.end === option.last) {
+                  
+                  option.first.next.forEach((first, i) =>
+                        options.push({ first, last: option.last.prev[i],
+                        matchable: true }));
                 } else options.push(option);
               });
-              
-              if (props.length > 0) {
-                const optionWithProps = factory("quantifier", lazyStart,
-                      lazyEnd, 0, 1, factory("group", []), true);
-                
-                optionWithProps.props = props;
-                optionWithProps.matchable = false;
-                
-                options.push(optionWithProps);
-              }
               
               return options;
             })()
           , optionsFiltered = options.filter(option => option.matchable)
-          , props = []
           ;
       
-      options.forEach(option => (option.props = getProps(option.first,
-            option.last)).forEach(prop => addProp(props, prop.name, prop.shallow)));
+      options.forEach(option => getProps(option.first, option.last).forEach(
+            prop => addProp(props, prop.name, prop.shallow)));
       
-      optionsFiltered.forEach(option => option.props =
-            props.filter(prop => option.props.every(p => p.name !== prop.name)));
-      
-      if (optionsFiltered.length === 1 && optionsFiltered[0].props.length === 0
-              && !preserve) return optionsFiltered[0];
+      if ((optionsFiltered.length === 1 && props.length === 0
+            || options.length === 0) && !preserve) return optionsFiltered[0];
       
       optionsFiltered.forEach(option =>
             (option.first.prev = first, option.last.next = last));
       
-      first.next = optionsFiltered.map(option =>
-            ({ props: option.props, regexPart: option.first }));
-      
-      last.prev = optionsFiltered.map(option =>
-            ({ props: option.props, regexPart: option.last }));
+      first.next = optionsFiltered.map(option => option.first);
+      last.prev = optionsFiltered.map(option => option.last);
       
       return { first, last, matchable: optionsFiltered.length !== 0 };
     }
@@ -574,9 +552,11 @@ const RegexGroup = RegeRex.RegexGroup = class RegexGroup {
           function constructObj({ sub, children }) {
             const depthArr = [ { props: [], qIndex: 0 } ];
             
-            let lastDepth = 0, childrenIndex = 0;
+            let lastDepth = 0;
             
             sub.quantifierClosedStack.forEach((qItem) => {
+              let childrenIndex = 0;
+              
               const props = {}, propUsed = {};
               
               qItem.props.forEach((prop) => {
@@ -627,9 +607,9 @@ const RegexGroup = RegeRex.RegexGroup = class RegexGroup {
                         if (objName === null)
                               return strOrig.substring(posStart, posEnd);
                         
-                        while (children[childrenIndex].sub.retObj.name !== objName)
+                        while (children[childrenIndex].sub.retObj.name !== objName){
                               childrenIndex++;
-                        
+                        }
                         return constructObj(children[childrenIndex++]);
                       })()
                     ;
@@ -680,10 +660,10 @@ const RegexGroup = RegeRex.RegexGroup = class RegexGroup {
         case assertionStart: throw new Error("Not implemented yet, see issue #1.") // TODO match assertion
         case alternationStart: {
           for (let f = 0; f < regexPart.next.length; f++) {
-            addOne("quantifier", regexPart.next[f].props, true, 1, 0)
+            addOne("quantifier", regexPart.props, true, 1, 0)
             
             const retObj = matchRegexPart(pos, line, column,
-                  regexPart.next[f].regexPart);
+                  regexPart.next[f]);
             
             if (retObj) return retObj; else addOne("quantifier");
           }
@@ -781,7 +761,7 @@ const RegexGroup = RegeRex.RegexGroup = class RegexGroup {
                 case startLine: boundaryMatches = escapedChar.l.has(chPrev); break;
                 case endLine: boundaryMatches = escapedChar.l.has(ch); break;
                 case startString: boundaryMatches = pos === 1; break;
-                case endString: boundaryMatches = pos === str.length; break;
+                case endString: boundaryMatches = pos === str.length + 1; break;
                 case startPosition: boundaryMatches = pos === start + 1; break;
                 case endPosition: boundaryMatches = pos === end; break;
                 case wordBoundary: throw new Error("Not implemented yet, see issue #3."); // TODO word boundary
@@ -794,12 +774,6 @@ const RegexGroup = RegeRex.RegexGroup = class RegexGroup {
             
             escapedChar.l.has(ch) ? (line++, column = 0) : column++;
             
-            if (typeof groupPart === "object") {
-              let chInsideBounds = groupPart.min <= ch && ch <= groupPart.max;
-              
-              return groupPart.negated ? !chInsideBounds : chInsideBounds;
-            }
-            
             if (groupPart instanceof Array) {
               return groupPart.every((notHere) => {
                 if (typeof notHere === "string") return notHere !== ch;
@@ -810,12 +784,22 @@ const RegexGroup = RegeRex.RegexGroup = class RegexGroup {
               });
             }
             
+            if (typeof groupPart === "object") {
+              let chInsideBounds = groupPart.min <= ch && ch <= groupPart.max;
+              
+              return groupPart.negated ? !chInsideBounds : chInsideBounds;
+            }
+            
             return ch === groupPart;
           }) ? matchRegexPart(pos, line, column, regexPart.next) : null;
         }
         case subroutine: {
-            const regex = regexMap.get(regexPart.name)
-                , stackItem =
+            const regex = regexMap.get(regexPart.name);
+            
+            if (!regex) throw new Error("Unknown subroutine \"" + regexPart.name
+                  + "\".");
+            
+            const stackItem =
                   { retObj:
                     { input: strOrig
                     , loc:

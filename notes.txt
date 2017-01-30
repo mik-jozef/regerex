@@ -7,8 +7,8 @@ charClass: { min: string, max: string, negated: boolean }
 props: Array of { name: string, shallow: boolean }
 
 parsed: everything below
-alternationStart { type, end, next: Array of { props, regexPart: parsed }, prev }
-alternationEnd { type, next, prev: Array of { props, regexPart: parsed } }
+alternationStart { type, props, end, next: Array of parsed, prev }
+alternationEnd { type, props, next, prev: Array of parsed }
 assertionStart { type, name: string, dimensions, condition: parsed | null, then: parsed, thenNot: parsed, prev }
 assertionEnd { type, name: string, dimensions, condition: parsed | null, then: parsed, thenNot: parsed, next }
 backreference { type, name: string, dimensions, next, prev }
@@ -62,6 +62,108 @@ push                         pop
 start === end; start > 0     start === end; end > 0
 
 
+------
+Regex
+Name:x
+i|Name:x
+
+Special characters
+global: `^$|\*+?{}[]()`
+local (only considered special in some places): `<>:`
+
+Boundaries
+^
+$
+|
+\a
+\z
+\`
+\'
+
+Alternation and character classes
+[xyz...]
+[-xy]
+
+Groups and subroutines
+(x)
+(:Name)
+(:name:x)
+(:name.x)
+(:name:(:Name))
+(:name=capturedValue)
+(.name:x)
+(.name.x)
+
+TODO global capturing groups (;name)
+TODO? unmatch capturing group (:name!)
+
+Backreference
+(=name)
+(=name[n])
+
+Quantifiers
+x?
+x*
+x+
+x{n}
+x{n,}
+x{n,m}
+
+Q?
+Q+
+
+Lookaround
+(?x:y<z)
+(?x>y:z)
+
+Assertion
+(|name>x:y)
+(|name=x>y:z)
+(|name[n]>x:y)
+(|name[n]=x>y:z)
+------
+
+
+------
+map of
+
+Character: char
+Character classes: negated, char, char
+Negated alternation: negated, array of char
+Boundary (7 types): type
+Alternation: props, array of address
+Subroutine: name
+Capturing group: name, type(multi shallow global unmatch), obj, hidden, value
+TODO global capturing groups (;name)
+TODO? unmatch capturing group (:name!)
+
+Backreference
+(=name)
+(=name[n])
+
+Quantifiers
+x?
+x*
+x+
+x{n}
+x{n,}
+x{n,m}
+
+Q?
+Q+
+
+Lookaround
+(?x:y<z)
+(?x>y:z)
+
+Assertion
+(|name>x:y)
+(|name=x>y:z)
+(|name[n]>x:y)
+(|name[n]=x>y:z)
+------
+
+
 TODO
 1.  Unicode? http://www.regular-expressions.info/unicode.html
 2.  Second mode of matching? Matches will be organized into array, including parts
@@ -92,3 +194,4 @@ TODO
 10. Assertion and backreference that work for all values in array, like (=ref[])
 11. Encode regex as array of integers?
 12. How should replacing work?
+13. Way to capture true, false, number, date, symbol? (:Boolean), (:Boolean(true)) (:Int(178))
