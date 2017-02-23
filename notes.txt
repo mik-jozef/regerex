@@ -72,95 +72,54 @@ global: `^$|\*+?{}[]()`
 local (only considered special in some places): `<>:`
 
 Boundaries
-^
-$
-|
-\a
-\z
-\`
-\'
+^ $ | \a \z \` \'
 
 Alternation and character classes
-[xyz...]
-[-xy]
+\[-?xyz\]
 
 Groups and subroutines
-(x)
-(:Name)
-(:name:x)
-(:name.x)
-(:name:(:Name))
-(:name=capturedValue)
-(.name:x)
-(.name.x)
+\(x\)
+\(:Name\)
+\([.:]name[.:]x\)
+\(:name:\(:Name\)\)
+\(:name=capturedValue\)
 
 TODO global capturing groups (;name)
 TODO? unmatch capturing group (:name!)
 
 Backreference
-(=name)
-(=name[n])
+\(=name(\[n\])*\)
 
 Quantifiers
-x?
-x*
-x+
-x{n}
-x{n,}
-x{n,m}
-
-Q?
-Q+
+x[\?\*\+(\{n(,m?)?\})][\?\+]?
 
 Lookaround
 (?x:y<z)
 (?x>y:z)
 
 Assertion
-(|name>x:y)
-(|name=x>y:z)
-(|name[n]>x:y)
-(|name[n]=x>y:z)
+\(|name(\[n\])*(=x)?>y:z)
 ------
 
 
 ------
-map of
+global:
+array of string
+map of captrName -> type (multi shallow global unmatch)
 
 Character: char
 Character classes: negated, char, char
 Negated alternation: negated, array of char
 Boundary (7 types): type
-Alternation: props, array of address
+Alternation: array of prop, array of parsed
 Subroutine: name
-Capturing group: name, type(multi shallow global unmatch), obj, hidden, value
-TODO global capturing groups (;name)
-TODO? unmatch capturing group (:name!)
-
-Backreference
-(=name)
-(=name[n])
-
-Quantifiers
-x?
-x*
-x+
-x{n}
-x{n,}
-x{n,m}
-
-Q?
-Q+
-
-Lookaround
-(?x:y<z)
-(?x>y:z)
-
-Assertion
-(|name>x:y)
-(|name=x>y:z)
-(|name[n]>x:y)
-(|name[n]=x>y:z)
+Capturing group: name, obj, hidden, value
+Backreference name, array of dimension
+Quantifier: array of prop, type (greedy lazy possesive), min, max, special
+Lookahead: alternation of [ [ conditionA, then ], [ !conditionA, thenNot ] ]
+Lookbehind: alternation of [ [ conditionB, then ], [ !conditionB, thenNot ] ]
+Condition: lookbehind, negated, address
+Assertion name, array of dimension, condition, then, thenNot
 ------
 
 
@@ -195,3 +154,4 @@ TODO
 11. Encode regex as array of integers?
 12. How should replacing work?
 13. Way to capture true, false, number, date, symbol? (:Boolean), (:Boolean(true)) (:Int(178))
+14. RegexGroup.export() : Object (not static); new RegexGroup(exportObj[, newName[, trackLines]])
