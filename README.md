@@ -139,7 +139,7 @@ A valid regex name starts with a letter followed by letters, numbers and undersc
 | ---- | -------
 | `^`  | Beggining of line
 | `$`  | End of line
-| `|`  | Word boundary, see [#3](https://github.com/mik-jozef/regerex/issues/3)
+| `\|`  | Word boundary, see [#3](https://github.com/mik-jozef/regerex/issues/3)
 | `\a` | Start of string
 | `\z` | End of string
 | ``\` `` | Starting position
