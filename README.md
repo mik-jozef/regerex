@@ -153,7 +153,7 @@ Matches x, y, z or any other content. All special characters work normally. Can 
 `[abcd]` - matches "a", "b", "c" or "d".  
 `[a(bc)d]` - matches "a", "bc" or "d".  
 `[^ab]` - matches everything, but "a" and "b".  
-`[^a(zz)]` - this is now allowed.  
+`[^a(zz)]` - this is not allowed.  
 `[]` - never matches.  
 `[^]` - matches everything.
 
