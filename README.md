@@ -139,7 +139,7 @@ A valid regex name starts with a letter followed by letters, numbers and undersc
 | ---- | -------
 | `^`  | Beggining of line
 | `$`  | End of line
-| `|`  | Word boundary, see [#3](https://github.com/mik-jozef/regerex/issues/3)
+| `\|`  | Word boundary, see [#3](https://github.com/mik-jozef/regerex/issues/3)
 | `\a` | Start of string
 | `\z` | End of string
 | ``\` `` | Starting position
@@ -153,7 +153,7 @@ Matches x, y, z or any other content. All special characters work normally. Can 
 `[abcd]` - matches "a", "b", "c" or "d".  
 `[a(bc)d]` - matches "a", "bc" or "d".  
 `[^ab]` - matches everything, but "a" and "b".  
-`[^a(zz)]` - this is now allowed.  
+`[^a(zz)]` - this is not allowed.  
 `[]` - never matches.  
 `[^]` - matches everything.
 
