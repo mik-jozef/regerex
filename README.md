@@ -9,10 +9,10 @@ Currently, I work mainly on my website, so I probably won't contribute to this l
 #### Simple example
 
 ```javascript
-const { RegexGroup } = require("regerex"); // import RegexGroup from "regerex";
+import RegexGroup from "regerex";
 
 (new RegexGroup("Tag"))
-.add('Tag:<(:tagName:\\w+)(:attributes:(:Attr))*>(:children:(:Tag))*</(=tagName)>')
+.add('Tag:<(:tagName:\\w+)(:attributes:(:Attr))*>\\s*(:children:(:Tag))*\\s*</(=tagName)>')
 .add('Attr:\\s+(:attrName:\\w+)=(.quote:"?)(:value:\\w+)(=quote)')
 .match('<html><head></head><body id="bodyId"></body></html>');
 
