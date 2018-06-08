@@ -2,9 +2,7 @@
 
 Regex library that organizes matches into objects. This allows convenient matching of nested structures like HTML.
 
-Warning: RegeRex is a young library and this README is ahead of the actual project. Some things described here are not yet implemented and what is implemented might be buggy.
-
-Currently, I work mainly on my website, so I probably won't contribute to this library as much as I'd want. However, If you like the idea and/or would like to use RegeRex, let me know so I can shift some of my focus back here.
+Warning: RegeRex is currently not maintained and this README is ahead of the actual project. Some things described here are not yet implemented and what is implemented might be buggy.
 
 #### Simple example
 
